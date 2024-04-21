@@ -8,7 +8,7 @@
 5. Expected Pages:  
 - Login  
 - Sign Up  
-- Admin: Book and Inventory Management, User History   
+- Admin: Book Management, Inventory Management, User History   
 - User: View Books, My Account
 6. Database Used: MySQL
 7. Project Reference/Source: https://data-flair.training/blogs/library-management-system-python-project/ 
