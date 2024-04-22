@@ -70,6 +70,7 @@ def create_account(full_name_entry, email_entry, register_username_entry, regist
         confirm_password_entry.delete(0, 'end')
         confirm_password_entry.insert(0, 'Confirm Password') 
 
+
     except mysql.connector.Error as err:
         register_error_label.config(text=f"Error creating account: {str(err)}", foreground="red")
 
@@ -100,21 +101,21 @@ def on_leave_username(e):
 def on_enter_password(e):
     if register_password_entry.get() == 'Password':
         register_password_entry.delete(0, 'end')
-        register_password_entry.config(show="*")
+    register_password_entry.config(show="")
 
 def on_leave_password(e):
     if register_password_entry.get() == '':
-        register_password_entry.config(show=" ")
+        register_password_entry.config(show="")
         register_password_entry.insert(0, 'Password')
 
-def on_enter_confirm_password(e):
+def on_enter_confim_password(e):
     if confirm_password_entry.get() == 'Confirm Password':
         confirm_password_entry.delete(0, 'end')
-        confirm_password_entry.config(show="*")
+        confirm_password_entry.config(show="")
 
 def on_leave_confirm_password(e):
     if confirm_password_entry.get() == '':
-        confirm_password_entry.config(show=" ")
+        confirm_password_entry.config(show="")
         confirm_password_entry.insert(0, 'Confirm Password')
 
 def log_in_handler():
@@ -179,7 +180,7 @@ tk.Frame(frame, width=295, height=2, bg='#5C3C2B').place(x=35, y=262)
 confirm_password_entry = Entry(frame, width=25, fg='black', bg='White', font=('Lato', 11), bd=0, highlightthickness=0)
 confirm_password_entry.place(x=35, y=287)
 confirm_password_entry.insert(0, 'Confirm Password')
-confirm_password_entry.bind('<FocusIn>', on_enter_confirm_password)
+confirm_password_entry.bind('<FocusIn>', on_enter_confim_password)
 confirm_password_entry.bind('<FocusOut>', on_leave_confirm_password)
 
 tk.Frame(frame, width=295, height=2, bg='#5C3C2B').place(x=35, y=312)

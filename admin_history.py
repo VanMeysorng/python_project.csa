@@ -99,7 +99,7 @@ back_button.pack(side="bottom", anchor="se", padx=20, pady=10)
 table_frame = tk.Frame(window, bg='#d3bbab')
 table_frame.pack(side="left", padx=15, fill="both", expand=True, pady=15)
 
-columns = ("ID", "Fullname", "Email", "Username","Transaction Date", "Transaction Type")
+columns = ("#", "Fullname", "Email", "Username","Transaction Date", "Transaction Type")
 table = ttk.Treeview(table_frame, columns=columns, show="headings")
 for col in columns:
     table.heading(col, text=col)

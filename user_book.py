@@ -5,6 +5,7 @@ import os
 from tkinter import messagebox
 import subprocess
 from PIL import ImageTk, Image
+from datetime import datetime
 
 
 from tkinter import ttk
@@ -76,7 +77,7 @@ def search_product():
 def show_receipt(values, transaction_type, user_id):
     receipt_window = tk.Toplevel(window)
     receipt_window.title("Receipt")
-    receipt_window.geometry('400x400')
+    receipt_window.geometry('300x290')
     receipt_window.resizable(False, False)
     receipt_window.configure(bg="#d3bbab")
 
@@ -89,20 +90,20 @@ def show_receipt(values, transaction_type, user_id):
         username = "Unknown"  # Default username if not found
 
     # Create and pack labels to display the receipt information
-    receipt_label = tk.Label(receipt_window, text="Your Book Here:", font=("Lato", 15))
+    receipt_label = tk.Label(receipt_window, text="Your Book is Here:", font=("Lato", 15), bg='#d3bbab', fg='#563d2d')
     receipt_label.pack()
 
-    user_label = tk.Label(receipt_window, text="User: " + username, font=("Lato", 12))
+    user_label = tk.Label(receipt_window, text="User: " + username, font=("Lato", '12'), bg='#d3bbab')
     user_label.pack()
 
     for i in range(len(form_labels)):
-        entry_label = tk.Label(receipt_window, text=form_labels[i] + ": " + values[i], font=("Lato", 12))
+        entry_label = tk.Label(receipt_window, text=form_labels[i] + ": " + values[i], font=("Lato", 12), bg='#d3bbab')
         entry_label.pack()
 
-    transaction_type_label = tk.Label(receipt_window, text="Transaction Type: " + transaction_type, font=("Lato", 12))
+    transaction_type_label = tk.Label(receipt_window, text="Transaction Type: " + transaction_type, font=("Lato", 12), bg='#d3bbab')
     transaction_type_label.pack()
 
-    close_button = tk.Button(receipt_window, text="Close", command=receipt_window.destroy)
+    close_button = tk.Button(receipt_window, text="Close", command=receipt_window.destroy, bg='#563d2d', fg='white')
     close_button.pack()
 
 def add_product():
@@ -296,7 +297,7 @@ form_frame.pack(side="left", padx=0)
 info_label = tk.Label(form_frame, text="Your Book", font=("Lato", 30), bg="#d3bbab")
 info_label.pack(anchor="w", pady=(10, 20))  # Add some vertical padding
 
-form_labels = [ "Book#","Title","Author", "Genre", "Transaction Date"]
+form_labels = [ "Book#","Title","Author", "Genre"]
 form_entries = []
 
 for label_text in form_labels:
@@ -305,8 +306,14 @@ for label_text in form_labels:
     entry = tk.Entry(form_frame, font=entry_font)  # Increase font size for entries
     entry.pack(anchor="w")
     form_entries.append(entry)
+date_pr = StringVar()
+date_pr.set(datetime.now())
 
-transaction_type_label = tk.Label(form_frame, text="Transaction Type:", font=("Lato", 15), bg="#d3bbab")
+transaction_date_label = tk.Label(form_frame, text="Transaction date", font=("Lato", 15), bg="#d3bbab").pack(anchor="w")
+transaction_date_entry = Entry(form_frame, textvariable = date_pr, font= ("Arial", 15), width=23)
+transaction_date_entry.pack(anchor="w", pady=(0, 10))
+
+transaction_type_label = tk.Label(form_frame, text="Transaction Type", font=("Lato", 15), bg="#d3bbab")
 transaction_type_label.pack(anchor="w")
 
 transaction_type_combobox = ttk.Combobox(form_frame, values=["Issue","Return"], font=("Lato", 15))
@@ -316,7 +323,7 @@ transaction_type_combobox.pack(anchor="w", pady=(0, 10))  # Add some vertical pa
 buttons_frame = tk.Frame(window, bg="#d3bbab")
 buttons_frame.pack(side="left", padx=20)
 
-add_button = tk.Button(buttons_frame, text="Add New", width=10,command=add_product, font=("Lato", 10), fg='black', bg="#b99976")
+add_button = tk.Button(buttons_frame, text="Done", width=10,command=add_product, font=("Lato", 10), fg='black', bg="#b99976")
 add_button.pack(fill="x", padx=5, pady=10)
 
 # Populate the table with data from the database

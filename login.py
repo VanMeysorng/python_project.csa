@@ -48,7 +48,7 @@ def validate_login(username, password):
                 conn.commit()
 
                 root.destroy()
-                messagebox.showinfo("Success", "Welcome, "+username)
+                messagebox.showinfo("Success", "Welcome, "+username + '!')
                 subprocess.run(['python', 'user_book.py'])
                 login_attempts = 0
                 wait_time = 30

@@ -156,14 +156,14 @@ back_button.pack(side="bottom", anchor="se", padx=20, pady=15)
 # Username Label
 username = get_logged_in_username()
 username_label = tk.Label(window, text="Hi, " + username + "!", bg="#d3bbab", font=("Lato", 35))
-username_label.pack(side="left", pady=0, anchor="w", ipadx=30)
+username_label.pack(side="left", pady=0, anchor="w", padx=8)
 
 # Icon image
 icon_image = Image.open("icon.png")
 icon_image = icon_image.resize((150, 150))
 icon_image = ImageTk.PhotoImage(icon_image)
 icon_label = tk.Label(image=icon_image, bg="#d3bbab")
-icon_label.pack(side="left", pady=0, anchor="w", ipadx=30)
+icon_label.pack(side="left", pady=0, anchor="w", padx=0)
 
 # Table
 table_frame = tk.Frame(window,bg="#d3bbab")
@@ -175,6 +175,11 @@ for col in columns:
     table.heading(col, text=col)
     table.column(col, width=70)
 table.pack(side="left", fill="both", expand=True,pady=25)
+
+# Scrollbar
+scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=table.yview)
+scrollbar.pack(side="right", fill="y", pady=25)
+table.configure(yscrollcommand=scrollbar.set)
 
 # Populate the table with data from the database
 populate_user_history_table(user_id)

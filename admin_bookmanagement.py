@@ -49,7 +49,7 @@ def add_product():
     table.insert("", "end", values=(id_value, title_value, author_value, genre_value, publisher_value, publicationdate_value, dateadded_value, bookshelf_value, quantity_value))
     clear_entries()
 
-def update_product():
+def edit_product():
     # Get the values from the entry fields
     id_value = form_entries[0].get()  # Assuming the ID entry is the first one in the form_entries list
     title_value = form_entries[1].get()
@@ -122,7 +122,7 @@ def update_product():
         messagebox.showinfo("Wrong","Please select a product to update")
 
 
-def del_product():
+def remv_product():
     selected_item = table.selection()
     if selected_item:
         # Delete from the database
@@ -133,9 +133,9 @@ def del_product():
         # Delete from the table view
         table.delete(selected_item)
     else:
-        messagebox.showinfo("Please select a product you want to delete") 
+        messagebox.showinfo("Wrong","Please select a product you want to delete") 
 
-def show_product():
+def done_product():
      # Clear the table before repopulating with all data
     for item in table.get_children():
         table.delete(item)
@@ -238,17 +238,17 @@ for label_text in form_labels:
 buttons_frame = tk.Frame(window, bg='#d3bbab')
 buttons_frame.pack(side="left", padx=10)
 
-add_button = tk.Button(buttons_frame, text="Add New", bg='#b99976', width=10, command=add_product)
+add_button = tk.Button(buttons_frame, text="Add new", bg='#b99976', width=10, command=add_product)
 add_button.pack(fill="x", padx=5, pady=10)
 
-update_button = tk.Button(buttons_frame, text="Edit", bg='#b99976', width=10, command=update_product)
-update_button.pack(fill="x", padx=5, pady=10)
+edit_button = tk.Button(buttons_frame, text="Edit", bg='#b99976', width=10, command=edit_product)
+edit_button.pack(fill="x", padx=5, pady=10)
 
-del_button = tk.Button(buttons_frame, text="Remove", bg='#b99976', width=10, command=del_product)
-del_button.pack(fill="x", padx=5, pady=10)
+remv_button = tk.Button(buttons_frame, text="Remove", bg='#b99976', width=10, command=remv_product)
+remv_button.pack(fill="x", padx=5, pady=10)
 
-showall_button = tk.Button(buttons_frame, text="Display All", bg='#b99976', width=10, command=show_product)
-showall_button.pack(fill="x", padx=5, pady=10)
+done_button = tk.Button(buttons_frame, text="Done", bg='#b99976', width=10, command=done_product)
+done_button.pack(fill="x", padx=5, pady=10)
 
 # Table
 table_frame = tk.Frame(window, bg='#d3bbab')
