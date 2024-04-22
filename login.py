@@ -20,7 +20,7 @@ def validate_login(username, password):
     try:
         conn = mysql.connector.connect(
             user="root",
-            password="ms123456",
+            password="Chetra1234",
             host="localhost",
             database="Library"
         )

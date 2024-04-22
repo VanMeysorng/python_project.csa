@@ -163,7 +163,7 @@ icon_image = Image.open("icon.png")
 icon_image = icon_image.resize((150, 150))
 icon_image = ImageTk.PhotoImage(icon_image)
 icon_label = tk.Label(image=icon_image, bg="#d3bbab")
-icon_label.pack(side="left", pady=0, anchor="w", padx=20)
+icon_label.pack(side="left", pady=0, anchor="w", ipadx=30)
 
 # Table
 table_frame = tk.Frame(window,bg="#d3bbab")

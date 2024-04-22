@@ -76,7 +76,7 @@ def search_product():
 def show_receipt(values, transaction_type, user_id):
     receipt_window = tk.Toplevel(window)
     receipt_window.title("Receipt")
-    receipt_window.geometry('300x300')
+    receipt_window.geometry('400x400')
     receipt_window.resizable(False, False)
     receipt_window.configure(bg="#d3bbab")
 
@@ -89,20 +89,20 @@ def show_receipt(values, transaction_type, user_id):
         username = "Unknown"  # Default username if not found
 
     # Create and pack labels to display the receipt information
-    receipt_label = tk.Label(receipt_window, text="Your Book Here:", font=("Lato", 15), bg='#d3bbab', fg='#563d2d')
+    receipt_label = tk.Label(receipt_window, text="Your Book Here:", font=("Lato", 15))
     receipt_label.pack()
 
-    user_label = tk.Label(receipt_window, text="User: " + username, font=("Lato", '12'), bg='#d3bbab')
+    user_label = tk.Label(receipt_window, text="User: " + username, font=("Lato", 12))
     user_label.pack()
 
     for i in range(len(form_labels)):
         entry_label = tk.Label(receipt_window, text=form_labels[i] + ": " + values[i], font=("Lato", 12))
         entry_label.pack()
 
-    transaction_type_label = tk.Label(receipt_window, text="Transaction Type: " + transaction_type, font=("Lato", 12), bg='#d3bbab')
+    transaction_type_label = tk.Label(receipt_window, text="Transaction Type: " + transaction_type, font=("Lato", 12))
     transaction_type_label.pack()
 
-    close_button = tk.Button(receipt_window, text="Close", command=receipt_window.destroy, bg='#563d2d', fg='white')
+    close_button = tk.Button(receipt_window, text="Close", command=receipt_window.destroy)
     close_button.pack()
 
 def add_product():
