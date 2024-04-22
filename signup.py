@@ -34,7 +34,7 @@ def create_account(full_name_entry, email_entry, register_username_entry, regist
     try:
         conn = mysql.connector.connect(
             user="root",
-            password="Chetra1234",
+            password="ms123456",
             host="localhost",
             database="Library"
         )

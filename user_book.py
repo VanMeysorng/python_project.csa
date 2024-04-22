@@ -21,7 +21,7 @@ window.configure(bg="#d3bbab")
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Chetra1234",  # Change it to your password
+    password="ms123456",  # Change it to your password
     database="Library"
 )
 # Create a cursor
@@ -46,7 +46,7 @@ def sign_out():
         try:
             conn = mysql.connector.connect(
                 user="root",
-                password="Chetra1234",
+                password="ms123456",
                 host="localhost",
                 database="Library"
             )
