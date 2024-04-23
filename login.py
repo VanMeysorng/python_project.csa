@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, Frame, Button, Label, Entry
+from tkinter import messagebox, Frame, Button, Label, Entry
 from PIL import Image, ImageTk
 import mysql.connector
 import subprocess
@@ -8,7 +8,6 @@ import subprocess
 login_attempts = 0
 wait_time = 30
 user_id = None
-
 
 def login_handler():
     validate_login(username_entry.get(), password_entry.get())
@@ -27,7 +26,7 @@ def validate_login(username, password):
 
         cursor = conn.cursor()
 
-        if username == "admin" and password == "1234":
+        if username == "Admin" and password == "ms123456":
             root.destroy()
             messagebox.showinfo("Success", "Welcome, Admin!")
             subprocess.run(['python', 'admin_bookmanagement.py'])
@@ -71,27 +70,6 @@ def update_logged_in_status(cursor, userID, status):
     update_sql = "UPDATE user_account SET logged_in = %s WHERE id = %s"
     cursor.execute(update_sql, (status, user_id))
 
-def sign_out():
-    with open('user_id.txt', 'r') as file:
-        user_id = int(file.read())
-
-    if user_id:
-        try:
-            conn = mysql.connector.connect(
-                user="root",
-                password="ms123456",
-                host="localhost",
-                database="Library"
-            )
-
-            cursor = conn.cursor()
-            update_logged_in_status(cursor, user_id, 0)
-            conn.commit()
-            user_id = None
-
-        except mysql.connector.Error as err:
-            messagebox.showerror("Error", f"An error occurred: {str(err)}")
-    root.destroy()
 
 def on_enter_usesrname(e):
     username_entry.delete(0, 'end')
@@ -112,9 +90,9 @@ def on_leave_password(e):
         password_entry.insert(0, 'Password')
 
 def sign_up_handler():
-    # Add code to navigate to the login.py file
     root.destroy()
     subprocess.run(["python", "signup.py"])
+
 
 root = tk.Tk()
 root.title("Library Management System")
@@ -147,7 +125,7 @@ username_entry.bind('<FocusOut>', on_leave_username)
 tk.Frame(frame, width=295, height=2, bg='#5C3C2B').place(x=35, y=135)
 
 password_entry = Entry(frame, fg='black', border=0, bg='white', highlightbackground='white', highlightthickness=0, font=('Lato', 11))
-password_entry.place(x=35, y=155)  # Correct placement for the password entry
+password_entry.place(x=35, y=155)  
 password_entry.insert(0, 'Password')
 password_entry.bind('<FocusIn>', on_enter_password)
 password_entry.bind('<FocusOut>', on_leave_password)

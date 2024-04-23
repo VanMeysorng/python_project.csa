@@ -1,1 +1,1 @@
-container.pack(expand=True, fill="both")
+wait_time = 30

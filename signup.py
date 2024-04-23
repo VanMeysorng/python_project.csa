@@ -44,7 +44,6 @@ def create_account(full_name_entry, email_entry, register_username_entry, regist
         if password != confirm_password:
             register_error_label.config(text="Passwords do not match.", foreground="red")
         else:
-            # Update the SQL query to handle all input fields
             sql = "INSERT INTO user_account (full_name, email, username, password) VALUES (%s, %s, %s, %s)"
             cursor.execute(sql, (full_name, email, username, password))
 
@@ -65,7 +64,7 @@ def create_account(full_name_entry, email_entry, register_username_entry, regist
         register_username_entry.insert(0, 'Username')
 
         register_password_entry.delete(0, 'end')
-        register_password_entry.insert(0, 'Password')  # Set the value to "Password"
+        register_password_entry.insert(0, 'Password') 
 
         confirm_password_entry.delete(0, 'end')
         confirm_password_entry.insert(0, 'Confirm Password') 
@@ -120,7 +119,6 @@ def on_leave_confirm_password(e):
         confirm_password_entry.insert(0, 'Confirm Password')
 
 def log_in_handler():
-    # Add code to navigate to the login.py file
     root.destroy()
     subprocess.run(["python", "login.py"])
 

@@ -27,19 +27,27 @@ cursor = connection.cursor()
 
 # Function to populate the table view with data from the database# Function to populate the table view with data from the database
 def populate_table():
-    cursor.execute("SELECT user_account.id, user_account.full_name, user_account.email, user_account.username, userhistory.transaction_date, userhistory.transaction_type FROM user_account LEFT JOIN userhistory ON user_account.id = userhistory.userID")
+    cursor.execute("SELECT userhistory.userID, user_account.full_name, user_account.email, user_account.username, userhistory.book_title, userhistory.transaction_date, userhistory.transaction_type FROM user_account LEFT JOIN userhistory ON user_account.id = userhistory.userID")
     for row in cursor.fetchall():
         table.insert("", "end", values=row)
 
-def search_product():
+def search_book():
     search_query = search_entry.get()
-    cursor.execute("SELECT ID, book_title, book_author, book_genre, transaction_date, transaction_type FROM userhistory WHERE book_title LIKE %s OR ID = %s", ('%' + search_query + '%', search_query))
+    table.delete(*table.get_children())
 
-    # Clear the table before populating with search results
-    for item in table.get_children():
-        table.delete(item)
+    # Modify the SQL query to include a WHERE clause for filtering
+    cursor.execute("""
+        SELECT userhistory.userID, user_account.full_name, user_account.email, user_account.username,
+               userhistory.book_title, userhistory.transaction_date, userhistory.transaction_type
+        FROM user_account
+        LEFT JOIN userhistory ON user_account.id = userhistory.userID
+        WHERE user_account.id LIKE %s OR user_account.full_name LIKE %s OR user_account.email LIKE %s OR user_account.username LIKE %s
+        """, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
+
+    # Fetch the results and populate the table
     for row in cursor.fetchall():
         table.insert("", "end", values=row)
+
 
 # Button Click Functions
 def bookmanage_click():
@@ -54,9 +62,9 @@ def exit_click():
     window.destroy()
     subprocess.run(['python', 'login.py'])
 
-# Custom Font for Buttons
-button_font = ("Lato", 14)  # Custom font for buttons
-entry_font = ("Lato", 13)  # Custom font for entries
+# Custom Font for Buttons and Entries
+button_font = ("Lato", 14)  
+entry_font = ("Lato", 13)  
 
 # Frame for Buttons
 button_frame = tk.Frame(window, bg="#3d291f")
@@ -69,7 +77,7 @@ logo_image = ImageTk.PhotoImage(logo_image)
 logo_label = tk.Label(button_frame, image=logo_image, highlightthickness=0, bd=0, bg="#3d291f", compound=tk.LEFT)
 logo_label.pack(side="left", padx=0, pady=0, anchor="nw")
 
-# Buttons for Products, Customers, Manage, Exit
+# Buttons
 bookManage_button = tk.Button(button_frame, text="Book Management", bg='#563d2d', fg='white', font=button_font, command=bookmanage_click, width=16, padx=10)
 bookManage_button.pack(side="left", padx=5)
 
@@ -79,7 +87,7 @@ invenManage_button.pack(side="left", padx=5)
 userhis_button = tk.Button(button_frame, text="User History", bg='#563d2d', fg='white', font=button_font, width=10)
 userhis_button.pack(side="left",padx= 5)
 
-search_button = tk.Button(button_frame, text="Search", bg='#563d2d', fg='white', font=button_font, width=10, command=search_product)
+search_button = tk.Button(button_frame, text="Search", bg='#563d2d', fg='white', font=button_font, width=10, command=search_book)
 search_button.pack(side="right", padx=12, pady=10, anchor=E)
 
 search_entry = tk.Entry(button_frame, font=button_font, fg='#563d2d', bg='white')
@@ -93,7 +101,7 @@ back_button.pack(side="bottom", anchor="se", padx=20, pady=10)
 table_frame = tk.Frame(window, bg='#d3bbab')
 table_frame.pack(side="left", padx=15, fill="both", expand=True, pady=15)
 
-columns = ("#", "Fullname", "Email", "Username", "Transaction Date", "Transaction Type")
+columns = ("#", "Fullname", "Email", "Username", "Title", "Transaction Date", "Transaction Type")
 table = ttk.Treeview(table_frame, columns=columns, show="headings")
 for col in columns:
     table.heading(col, text=col)
