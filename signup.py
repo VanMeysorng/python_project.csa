@@ -186,7 +186,7 @@ tk.Frame(frame, width=295, height=2, bg='#5C3C2B').place(x=35, y=312)
 
 Button(frame, width=9, pady=7, text='Sign Up', fg='white', bg='#5C3C2B', command=create_account_handler).place(x=155, y=340)
 
-label1 = Label(frame, text="Doesn't have an account yet?", fg='Black', bg='white', font=('Ariel', 10))
+label1 = Label(frame, text="Have an Account?", fg='Black', bg='white', font=('Ariel', 10))
 label1.place(x=72, y=393)
 
 Button(frame, width=6, pady=7, text='Log In', bg='white', fg='#5C3C2B', borderwidth=0, font= ('Ariel', 10),command=log_in_handler).place(x=245, y=385)
