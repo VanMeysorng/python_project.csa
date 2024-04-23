@@ -15,7 +15,7 @@ def login_handler():
 
 # Add other functions here
 def validate_login(username, password):
-    global login_attempts, wait_time, user_id
+    global login_attempts, wait_time, userID
 
     try:
         conn = mysql.connector.connect(
@@ -40,11 +40,11 @@ def validate_login(username, password):
             result = cursor.fetchone()
 
             if result:
-                user_id = result[0]
-                with open('user_id.txt', 'w') as file:
-                    file.write(str(user_id))
+                userID = result[0]
+                with open('userID.txt', 'w') as file:
+                    file.write(str(userID))
 
-                update_logged_in_status(cursor, user_id, 1)
+                update_logged_in_status(cursor, userID, 1)
                 conn.commit()
 
                 root.destroy()
@@ -67,7 +67,7 @@ def validate_login(username, password):
     except mysql.connector.Error as err:
         messagebox.showerror("Error", f"An error occurred: {str(err)}")
 
-def update_logged_in_status(cursor, user_id, status):
+def update_logged_in_status(cursor, userID, status):
     update_sql = "UPDATE user_account SET logged_in = %s WHERE id = %s"
     cursor.execute(update_sql, (status, user_id))
 

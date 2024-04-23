@@ -20,7 +20,7 @@ window.configure(bg="#d3bbab")
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="ms123456",  # Change it to your password
+    password="Chetra1234",  # Change it to your password
     database="Library"
 )
 
@@ -32,15 +32,15 @@ button_font = ("Lato", 15)  # Custom font for buttons
 entry_font = ("Lato", 12)  # Custom font for entries
 
 # Retrieving the user_id from the file
-with open('user_id.txt', 'r') as file:
-    user_id = int(file.read())
+with open('userID.txt', 'r') as file:
+    userID = int(file.read())
 
 def search_product():
     search_query = search_entry.get()
     if not search_query:  # If the search query is empty, repopulate the table with all records
         for item in table.get_children():
             table.delete(item)
-        populate_user_history_table(user_id)
+        populate_user_history_table(userID)
     else:
         cursor.execute("SELECT book_id, book_title, book_author, book_genre, transaction_date, transaction_type FROM userhistory WHERE book_id = %s OR book_title LIKE %s", (search_query, '%' + search_query + '%'))
         for item in table.get_children():
@@ -49,9 +49,10 @@ def search_product():
             table.insert("", "end", values=row)
 
 
-def populate_user_history_table(user_id):
+
+def populate_user_history_table(userID):
     try:
-        cursor.execute("SELECT book_id, book_title, book_author, book_genre, transaction_date, transaction_type FROM userhistory WHERE user_id = %s", (user_id,))
+        cursor.execute("SELECT book_id, book_title, book_author, book_genre, transaction_date, transaction_type FROM userhistory WHERE userID = %s", (userID,))
         results = cursor.fetchall()
 
         for row in results:
@@ -59,15 +60,23 @@ def populate_user_history_table(user_id):
 
     except mysql.connector.Error as err:
         print(f"An error occurred: {str(err)}")
+
 # Function to retrieve the username of the logged-in user
 def get_logged_in_username():
-    # Retrieve the username from the user_account table based on the logged-in user
-    cursor.execute("SELECT username FROM user_account WHERE logged_in = 1")
+    cursor.execute("SELECT username FROM user_account WHERE id = %s", (userID,))
     result = cursor.fetchone()
     if result:
         return result[0]
     else:
         return ""
+
+# def update_username_label():
+#     # Retrieve the username of the logged-in user
+#     username = get_logged_in_username()
+#     # Update the username label with the retrieved username
+#     username_label.config(text="Hi, " + username + "!")
+#     # Schedule the function to run again after a delay (e.g., 1 second)
+#     username_label.after(1000, update_username_label)
 
 def seeacc_btn():
     window.destroy()
@@ -76,10 +85,10 @@ def seeacc_btn():
 
 def sign_out():
     # Retrieving the user_id from the file
-    with open('user_id.txt', 'r') as file:
-        user_id = int(file.read())
+    with open('userID.txt', 'r') as file:
+        userID = int(file.read())
 
-    if user_id:
+    if userID:
         try:
             conn = mysql.connector.connect(
                 user="root",
@@ -89,18 +98,19 @@ def sign_out():
             )
 
             cursor = conn.cursor()
-            update_logged_in_status(cursor, user_id, 0)  # Set logged_in status to 0 for the logged-out user
+            update_logged_in_status(cursor, userID, 0)  # Set logged_in status to 0 for the logged-out user
             conn.commit()
-            user_id = None  # Reset the user ID
+            userID = None  # Reset the user ID
 
         except mysql.connector.Error as err:
             messagebox.showerror("Error", f"An error occurred: {str(err)}")
     window.destroy()  # Close the application
 
 
-def update_logged_in_status(cursor, user_id, status):
+def update_logged_in_status(cursor, userID, status):
     update_sql = "UPDATE user_account SET logged_in = %s WHERE id = %s"
-    cursor.execute(update_sql, (status, user_id))
+    cursor.execute(update_sql, (status, userID))
+
 
 def exit_click():
     try:
@@ -112,7 +122,7 @@ def exit_click():
         )
 
         cursor = conn.cursor()
-        update_logged_in_status(cursor, user_id, 0)  # Set logged_in status to 0 for the logged-out user
+        update_logged_in_status(cursor, userID, 0)  # Set logged_in status to 0 for the logged-out user
         conn.commit()
         window.destroy()  # Close the application
         subprocess.run(['python', 'login.py'])
@@ -149,14 +159,14 @@ search_entry.pack(side="right", padx=25)
 back_button = tk.Button(window, text="Back", font=button_font, width=10, command=exit_click, bg='#563d2d', fg='white',)
 back_button.pack(side="bottom", anchor="se", padx=20, pady=15)
 
-
-# signout_button = tk.Button(button_frame, text="Sign Out", font=button_font, command=exit_click, width=10)
-# signout_button.pack(side="right", padx = 30)
-
 # Username Label
 username = get_logged_in_username()
 username_label = tk.Label(window, text="Hi, " + username + "!", bg="#d3bbab", font=("Lato", 35))
 username_label.pack(side="left", pady=0, anchor="w", padx=8)
+
+
+# # Call the function to update the username label
+# update_username_label()
 
 # Icon image
 icon_image = Image.open("icon.png")
@@ -182,7 +192,7 @@ scrollbar.pack(side="right", fill="y", pady=25)
 table.configure(yscrollcommand=scrollbar.set)
 
 # Populate the table with data from the database
-populate_user_history_table(user_id)
+populate_user_history_table(userID)
 window.protocol("WM_DELETE_WINDOW", sign_out)  # Bind exit_click to window close
 
 window.mainloop()

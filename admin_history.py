@@ -18,21 +18,22 @@ window.configure(bg="#d3bbab")
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="ms123456",  # Change it to your password
+    password="Chetra1234",  # Change it to your password
     database="Library"
 )
 
 # Create a cursor
 cursor = connection.cursor()
 
-# Function to populate the table view with data from the database
+# Function to populate the table view with data from the database# Function to populate the table view with data from the database
 def populate_table():
-    cursor.execute("SELECT user_account.id, user_account.full_name, user_account.email, user_account.username, UserHistory.transaction_date, UserHistory.transaction_type FROM user_account LEFT JOIN UserHistory ON user_account.id = UserHistory.user_id")
+    cursor.execute("SELECT user_account.id, user_account.full_name, user_account.email, user_account.username, userhistory.transaction_date, userhistory.transaction_type FROM user_account LEFT JOIN userhistory ON user_account.id = userhistory.userID")
     for row in cursor.fetchall():
         table.insert("", "end", values=row)
+
 def search_product():
     search_query = search_entry.get()
-    cursor.execute("SELECT id, full_name, email, username FROM user_account WHERE username LIKE %s OR id = %s", ('%' + search_query + '%', search_query))
+    cursor.execute("SELECT ID, book_title, book_author, book_genre, transaction_date, transaction_type FROM userhistory WHERE book_title LIKE %s OR ID = %s", ('%' + search_query + '%', search_query))
 
     # Clear the table before populating with search results
     for item in table.get_children():
@@ -48,10 +49,6 @@ def bookmanage_click():
 def Inventory_click():
     window.destroy()
     subprocess.run(['python', 'admin_inventory.py'])
-
-# def useracc_click():
-#     window.destroy()
-#     subprocess.run(['python', 'admin_account.py'])
 
 def exit_click():
     window.destroy()
@@ -79,9 +76,6 @@ bookManage_button.pack(side="left", padx=5)
 invenManage_button = tk.Button(button_frame, text="Inventory Management", bg='#563d2d', fg='white', font=button_font, command=Inventory_click, width=16,padx=10)
 invenManage_button.pack(side="left", padx=5)
 
-# useracc_button = tk.Button(button_frame, text="User Account", bg='#563d2d', fg='white', font=button_font, width=10, command=useracc_click)
-# useracc_button.pack(side="left",padx= 5)
-
 userhis_button = tk.Button(button_frame, text="User History", bg='#563d2d', fg='white', font=button_font, width=10)
 userhis_button.pack(side="left",padx= 5)
 
@@ -99,7 +93,7 @@ back_button.pack(side="bottom", anchor="se", padx=20, pady=10)
 table_frame = tk.Frame(window, bg='#d3bbab')
 table_frame.pack(side="left", padx=15, fill="both", expand=True, pady=15)
 
-columns = ("#", "Fullname", "Email", "Username","Transaction Date", "Transaction Type")
+columns = ("#", "Fullname", "Email", "Username", "Transaction Date", "Transaction Type")
 table = ttk.Treeview(table_frame, columns=columns, show="headings")
 for col in columns:
     table.heading(col, text=col)

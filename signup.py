@@ -34,7 +34,7 @@ def create_account(full_name_entry, email_entry, register_username_entry, regist
     try:
         conn = mysql.connector.connect(
             user="root",
-            password="ms123456",
+            password="Chetra1234",
             host="localhost",
             database="Library"
         )
@@ -73,6 +73,7 @@ def create_account(full_name_entry, email_entry, register_username_entry, regist
 
     except mysql.connector.Error as err:
         register_error_label.config(text=f"Error creating account: {str(err)}", foreground="red")
+
 
 def on_enter_fullname(e):
     full_name_entry.delete(0, 'end')

@@ -10,7 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Create the main window
 window = tk.Tk()
-window.title("User History")
+window.title("Inventory Management")
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 window_width = 1500
@@ -31,7 +31,7 @@ connection = mysql.connector.connect(
 
 # Create a cursor
 cursor = connection.cursor()
-    
+
 # Function to populate the table view with data from the database
 def populate_table():
     cursor.execute("SELECT id, title, author, genre, quantity, status FROM Books")
@@ -154,15 +154,28 @@ def generate_bar_chart():
     transaction_types = [result[0] for result in results]
     counts = [result[1] for result in results]
 
+    # If counts list is empty, set max_count to 0
+    max_count = max(counts) if counts else 0
+
     # Create the bar chart with specified figure size
     fig, ax = plt.subplots(figsize=(6, 5))  # Adjust the figure size as per your preference
-    ax.bar(transaction_types, counts)
+    
+    # Incrementing x-axis values by 1
+    x_values = range(1, len(transaction_types) + 1)
+    
+    ax.bar(x_values, counts)
     ax.set_xlabel('Transaction Type')
     ax.set_ylabel('Count')
     ax.set_title('Transaction Types: Issued vs. Returned')
 
+    # Set the x-axis ticks to start from 1
+    ax.set_xticks(x_values)
+
     # Set the y-axis range from 0 to the maximum count + 1
-    ax.set_ylim(0, max(counts) + 1)
+    ax.set_ylim(0, max_count + 1)
+
+    # Set y-ticks to display only whole numbers
+    ax.set_yticks(range(int(max_count) + 2))
 
     # Create a FigureCanvasTkAgg instance and embed the chart in the window
     chart_canvas = FigureCanvasTkAgg(fig, master=window)

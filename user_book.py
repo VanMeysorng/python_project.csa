@@ -21,40 +21,40 @@ window.configure(bg="#d3bbab")
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="ms123456",  # Change it to your password
+    password="Chetra1234",  # Change it to your password
     database="Library"
 )
 # Create a cursor
 cursor = connection.cursor()
 # Create UserHistory table
-cursor.execute("CREATE TABLE IF NOT EXISTS UserHistory (id INT AUTO_INCREMENT PRIMARY KEY,user_id VARCHAR(100), book_id VARCHAR(100), book_title VARCHAR(255), book_author VARCHAR(255), book_genre VARCHAR(255), transaction_date VARCHAR(100), transaction_type VARCHAR(255))")
+cursor.execute("CREATE TABLE IF NOT EXISTS UserHistory (id INT AUTO_INCREMENT PRIMARY KEY,userID VARCHAR(100), book_id VARCHAR(100), book_title VARCHAR(255), book_author VARCHAR(255), book_genre VARCHAR(255), transaction_date VARCHAR(100), transaction_type VARCHAR(255))")
 
 # Custom Font for Buttons
 button_font = ("Lato", 15)  # Custom font for buttons
 entry_font = ("Lato", 12)  # Custom font for entries
 
 # Retrieving the user_id from the file
-with open('user_id.txt', 'r') as file:
-    user_id = int(file.read())
+with open('userId.txt', 'r') as file:
+    userID = int(file.read())
    
 def sign_out():
     # Retrieving the user_id from the file
-    with open('user_id.txt', 'r') as file:
-        user_id = int(file.read())
+    with open('userID.txt', 'r') as file:
+        userID = int(file.read())
 
-    if user_id:
+    if userID:
         try:
             conn = mysql.connector.connect(
                 user="root",
-                password="ms123456",
+                password="Chetra1234",
                 host="localhost",
                 database="Library"
             )
 
             cursor = conn.cursor()
-            update_logged_in_status(cursor, user_id, 0)  # Set logged_in status to 0 for the logged-out user
+            update_logged_in_status(cursor, userID, 0)  # Set logged_in status to 0 for the logged-out user
             conn.commit()
-            user_id = None  # Reset the user ID
+            userID = None  # Reset the user ID
 
         except mysql.connector.Error as err:
             messagebox.showerror("Error", f"An error occurred: {str(err)}")
@@ -74,7 +74,7 @@ def search_product():
         for row in cursor.fetchall():
             table.insert("", "end", values=row)
 
-def show_receipt(values, transaction_type, user_id):
+def show_receipt(values, transaction_type, userID):
     receipt_window = tk.Toplevel(window)
     receipt_window.title("Receipt")
     receipt_window.geometry('300x290')
@@ -82,7 +82,7 @@ def show_receipt(values, transaction_type, user_id):
     receipt_window.configure(bg="#d3bbab")
 
     # Retrieve the username from the user_account table based on the user_id
-    cursor.execute("SELECT username FROM user_account WHERE id = %s", (user_id,))
+    cursor.execute("SELECT username FROM user_account WHERE id = %s", (userID,))
     result = cursor.fetchone()
     if result:
         username = result[0]
@@ -99,6 +99,9 @@ def show_receipt(values, transaction_type, user_id):
     for i in range(len(form_labels)):
         entry_label = tk.Label(receipt_window, text=form_labels[i] + ": " + values[i], font=("Lato", 12), bg='#d3bbab')
         entry_label.pack()
+
+    transaction_date_label = tk.Label(receipt_window, text="Transaction Date: " + date, font=("Lato", 12), bg="#d3bbab")
+    transaction_date_label.pack()
 
     transaction_type_label = tk.Label(receipt_window, text="Transaction Type: " + transaction_type, font=("Lato", 12), bg='#d3bbab')
     transaction_type_label.pack()
@@ -134,12 +137,13 @@ def add_product():
             connection.commit()
 
             # Store the user-specific data in the UserHistory table
-            user_history_values = [user_id, book_id, values[1], values[2], values[3], values[4], transaction_type]  # Extract the necessary values from 'values' list
-            cursor.execute("INSERT INTO UserHistory (user_id, book_id, book_title, book_author, book_genre, transaction_date, transaction_type) VALUES (%s, %s, %s, %s, %s, %s, %s)", user_history_values)
+            
+            user_history_values = [userID, book_id, values[1], values[2], values[3], date, transaction_type]  # Extract the necessary values from 'values' list
+            cursor.execute("INSERT INTO userhistory (userID, bookID, book_title, book_author, book_genre, transaction_date, transaction_type) VALUES (%s, %s, %s, %s, %s, %s, %s)", user_history_values)
             connection.commit()
             clear_entries()
             # After updating the database and clearing the entries, show the receipt
-            show_receipt(values, transaction_type, user_id)
+            show_receipt(values, transaction_type, userID)
             update_table_row(book_id, new_status)  # Update the specific row in the table view with the new status
         elif transaction_type == "Issue":
             if current_quantity > 0:  # Check if there are available copies to issue
@@ -158,12 +162,12 @@ def add_product():
                 connection.commit()
 
                 # Store the user-specific data in the UserHistory table
-                user_history_values = [user_id, book_id, values[1], values[2], values[3], values[4], transaction_type]  # Extract the necessary values from 'values' list
-                cursor.execute("INSERT INTO UserHistory (user_id, book_id, book_title, book_author, book_genre, transaction_date, transaction_type) VALUES (%s, %s, %s, %s, %s, %s, %s)", user_history_values)
+                user_history_values = [userID, book_id, values[1], values[2], values[3], date, transaction_type]  # Extract the necessary values from 'values' list
+                cursor.execute("INSERT INTO userhistory (userID, bookID, book_title, book_author, book_genre, transaction_date, transaction_type) VALUES (%s, %s, %s, %s, %s, %s, %s)", user_history_values)
                 connection.commit()
                 clear_entries()
                 # After updating the database and clearing the entries, show the receipt
-                show_receipt(values, transaction_type, user_id)
+                show_receipt(values, transaction_type, userID)
                 update_table_row(book_id, new_status)  # Update the specific row in the table view with the new status
             else:
                 messagebox.showerror("Error", "No available copies to issue")
@@ -188,11 +192,11 @@ def update_table_row(book_id, new_status):
             table.item(item, values=updated_values)
             break
 
-def update_logged_in_status(cursor, user_id, status):
+def update_logged_in_status(cursor, userID, status):
     update_sql = "UPDATE user_account SET logged_in = %s WHERE id = %s"
-    cursor.execute(update_sql, (status, user_id))
+    cursor.execute(update_sql, (status, userID))
     
-def get_logged_in_user_id():
+def get_logged_in_userID():
     # Retrieve the username from the user_account table based on the logged-in user
     cursor.execute("SELECT id FROM user_account WHERE logged_in = 1")
     result = cursor.fetchone()
@@ -232,7 +236,7 @@ def exit_click():
         )
 
         cursor = conn.cursor()
-        update_logged_in_status(cursor, user_id, 0)  # Set logged_in status to 0 for the logged-out user
+        update_logged_in_status(cursor, userID, 0)  # Set logged_in status to 0 for the logged-out user
         conn.commit()
         window.destroy()  # Close the application
         subprocess.run(['python', 'login.py'])
@@ -307,9 +311,12 @@ for label_text in form_labels:
     entry.pack(anchor="w")
     form_entries.append(entry)
 date_pr = StringVar()
+# Assuming you have a StringVar variable named my_string_var
 date_pr.set(datetime.now())
+date = date_pr.get()
 
-transaction_date_label = tk.Label(form_frame, text="Transaction date", font=("Lato", 15), bg="#d3bbab").pack(anchor="w")
+
+transaction_date_label = tk.Label(form_frame, text="Transaction Date", font=("Lato", 15), bg="#d3bbab").pack(anchor="w")
 transaction_date_entry = Entry(form_frame, textvariable = date_pr, font= ("Arial", 15), width=23)
 transaction_date_entry.pack(anchor="w", pady=(0, 10))
 

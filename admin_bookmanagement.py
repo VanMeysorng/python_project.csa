@@ -6,6 +6,10 @@ from tkinter import messagebox
 import subprocess
 from PIL import ImageTk, Image
 from tkinter import ttk
+from tkcalendar import DateEntry
+
+
+
 
 # Create the main window
 window = tk.Tk()
@@ -18,7 +22,7 @@ window.configure(bg="#d3bbab")
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="ms123456",  # Change it to your password
+    password="Chetra1234",  # Change it to your password
     database="Library"
 )
 
@@ -213,26 +217,42 @@ search_entry.pack(side="right", padx=2, anchor=E)
 back_button = tk.Button(window, text="Back", bg='#563d2d', fg='white', font=button_font, command=exit_click, width=10)
 back_button.pack(side="bottom", anchor="se", padx=20, pady=10)
 
-# signout_button = tk.Button(button_frame, text="Sign Out", font=button_font, command=exit_click, width=10)
-# signout_button.pack(side="right", padx = 30)
+# Function to pick a date and insert it into the entry field
+def pick_date(entry):
+    def set_date():
+        entry.delete(0, tk.END)
+        entry.insert(0, cal.get_date().strftime("%m/%d/%y"))  # Format the date as mm/dd/yy
+        top.destroy()
 
-# Form Fields
+    top = tk.Toplevel(window)
+    cal = DateEntry(top, font="Arial 14")
+    cal.pack(fill="both", expand=True)
+    tk.Button(top, text="Select", command=set_date).pack()
+
+# Create the form frame
 form_frame = tk.Frame(window, bg='#d3bbab')
-form_frame.place(x=100, y=20)
 form_frame.pack(side="left", padx=30)
+
 # Add a label above the entry fields
 info_label = tk.Label(form_frame, text="Information", font=("Lato", 30), bg='#d3bbab')
 info_label.pack(anchor="w", pady=(0, 10))  # Add some vertical padding
 
-form_labels = ["Book#", "Title","Author", "Genre", "Publisher", "Publication Date", "Date Added", "Self#","Quantity"]
+form_labels = ["Book#", "Title", "Author", "Genre", "Publisher", "Publication Date", "Date Added", "Self#", "Quantity"]
 form_entries = []
 
 for label_text in form_labels:
     label = tk.Label(form_frame, text=label_text, font=button_font, bg='#d3bbab', padx=10)  # Increase font size for labels
     label.pack(anchor="w")
-    entry = tk.Entry(form_frame, font=entry_font)  # Increase font size for entries
+    
+    # Create a DateEntry widget for "Publication Date" and "Date Added" fields
+    if label_text in ["Publication Date", "Date Added"]:
+        entry = DateEntry(form_frame, font=entry_font, date_pattern="mm/dd/yy", width=16)  # Use DateEntry widget with specified date pattern
+    else:
+        entry = tk.Entry(form_frame, font=entry_font, width=18)  # Use regular Entry widget for other fields
+    
     entry.pack(anchor="w")
     form_entries.append(entry)
+
 
 # Buttons
 buttons_frame = tk.Frame(window, bg='#d3bbab')
